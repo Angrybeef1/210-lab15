@@ -1,6 +1,9 @@
 // COMSC 210 | Lab 15 | Robert Stonemetz
 
 #include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -23,22 +26,56 @@ class Movie {
 
     //getters
 
-    string getTitle(); 
-    int getYearReleased();
-    string getScreenWriter();
+    string getTitle() const {
+        return title;
+    } 
+    int getYearReleased() const {
+        return yearReleased;
+    }
+    string getScreenWriter() const {
+        return screenWriter;
+    }
 
     void print() const{
         cout << "Movie: " << title << endl;
-        cout << " Year Released: " << yearReleased << endl;
-        cout << " Screenwriter: " << screenWriter << endl << endl;
+        cout << "   Year Released: " << yearReleased << endl;
+        cout << "   Screenwriter: " << screenWriter << endl << endl;
     }
 
 
-}
+};
 
 
 int main(){
     vector <Movie> movies;
+    ifstream inputFile ("Movies.txt");
+
+    if (!inputFile) {
+        cerr << "Error opening input file!" << endl;
+
+        return 1;
+    }
+
+    string title;
+    int year;
+    string screenWriter;
+
+    while (getline(inputFile, title) && inputFile >> year) {
+        inputFile.ignore();
+        getline (inputFile, screenWriter);
+
+        Movie tempMovie (title, year, screenWriter);
+        movies.push_back(tempMovie);
+    }
+
+    inputFile.close();
+
+    cout << "Contents of the movie vector:" << endl;
+    for (const auto& movie : movies) {
+        movie.print();
+    }
+
+    return 0;
 
 
 
